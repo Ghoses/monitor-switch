@@ -276,37 +276,40 @@ function ConvertTo-OwnedIcon {
 function New-StatusIcon {
     param([bool]$PowerSaveOn)
 
-    $bmp = New-Object System.Drawing.Bitmap 32, 32
+    # 16x16 = native Tray-Groesse; Zeichnung fuellt fast die ganze Flaeche
+    # (wie Windows-LAN-Icon), damit es nicht "klein in der Mitte" wirkt.
+    $bmp = New-Object System.Drawing.Bitmap 16, 16
     $g = [System.Drawing.Graphics]::FromImage($bmp)
-    $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
+    $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
     $g.Clear([System.Drawing.Color]::Transparent)
 
     if ($PowerSaveOn) {
-        # AUS: dunkler Monitor + rotes X
-        $frame = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(55, 55, 60))
-        $screen = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(20, 20, 24))
-        $stand = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(90, 90, 95))
-        $g.FillRectangle($frame, 4, 6, 24, 16)
-        $g.FillRectangle($screen, 7, 9, 18, 10)
-        $g.FillRectangle($stand, 13, 22, 6, 3)
-        $g.FillRectangle($stand, 10, 25, 12, 2)
-        $penX = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(230, 70, 60), 2.5)
-        $g.DrawLine($penX, 10, 11, 20, 17)
-        $g.DrawLine($penX, 20, 11, 10, 17)
+        # AUS: dunkler Monitor + rotes X (randfuellend)
+        $frame = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(70, 70, 78))
+        $screen = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(18, 18, 22))
+        $stand = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(110, 110, 120))
+        $g.FillRectangle($frame, 0, 1, 16, 11)
+        $g.FillRectangle($screen, 2, 3, 12, 7)
+        $g.FillRectangle($stand, 6, 12, 4, 2)
+        $g.FillRectangle($stand, 3, 14, 10, 2)
+        $penX = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(240, 70, 55), 2)
+        $g.DrawLine($penX, 3, 3, 13, 10)
+        $g.DrawLine($penX, 13, 3, 3, 10)
         $penX.Dispose()
         $frame.Dispose(); $screen.Dispose(); $stand.Dispose()
     }
     else {
-        # AN: gruener Monitor mit leuchtendem Screen
-        $frame = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(40, 120, 70))
-        $screen = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(180, 255, 200))
-        $stand = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(50, 140, 80))
-        $g.FillRectangle($frame, 4, 6, 24, 16)
-        $g.FillRectangle($screen, 7, 9, 18, 10)
-        $g.FillRectangle($stand, 13, 22, 6, 3)
-        $g.FillRectangle($stand, 10, 25, 12, 2)
+        # AN: heller/gruener Monitor (randfuellend)
+        $frame = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(35, 150, 75))
+        $screen = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(170, 255, 195))
+        $stand = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(45, 160, 85))
+        $g.FillRectangle($frame, 0, 1, 16, 11)
+        $g.FillRectangle($screen, 2, 3, 12, 7)
+        $g.FillRectangle($stand, 6, 12, 4, 2)
+        $g.FillRectangle($stand, 3, 14, 10, 2)
         $dot = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 255))
-        $g.FillEllipse($dot, 14, 12, 4, 4)
+        $g.FillRectangle($dot, 7, 5, 2, 2)
         $dot.Dispose()
         $frame.Dispose(); $screen.Dispose(); $stand.Dispose()
     }
