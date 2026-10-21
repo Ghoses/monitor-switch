@@ -1,0 +1,11 @@
+# OS / editor
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# Local / secrets
+.env
+*.log
